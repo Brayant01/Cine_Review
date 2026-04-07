@@ -11,7 +11,7 @@ cursor = conexion_a_base_de_dados.cursor()
 
 #---------------- Funçoes do programa ;) ----------------#
 
-#validador de opciones con bucle
+#validador de opciones com bucle infinito
 def input_validation(valor_max, mensagem):
 
    while True: 
@@ -25,7 +25,7 @@ def input_validation(valor_max, mensagem):
         else:
             return valor
 
-#crea un usuario y lo agrega a la base de datos si no existe a tabla crea uma de uma vez e agrega o usuario
+#cria um usuario e agrega el na base de datos si nao existe a tabla crea uma de uma vez e agrega o usuario
 def criar_usuario(cursor, admin = 0):
     nome  = str(input("\nIngresa teu Nome: "))
     senha = str(input("\nIngresa tua Senha: "))
@@ -74,7 +74,7 @@ def normal_user_login(senha,email):
     
 #---------------------------!!!!so pode o administrador!!!!---------------------------#
 
-#verificar si se puede crear la base de datos si no prueba a ver que bases de datos hay en el sistema.
+#verificar se pode se crear a base de dados se no proba ver que bases de datos tem no sistema.
 def verificar_bd(cursor):
     try:
         cursor.execute("CREATE DATABASE IF NOT EXISTS prueba1;")
@@ -88,7 +88,7 @@ def verificar_bd(cursor):
         else: 
             return 2
 
-#valida el login del administrador pasando uno de 3 valores
+#valida el login do administrador pasando um de 3 valores
 def login_admin(senha, email):
     query = "SELECT admin FROM usuario WHERE email = %s"
     cursor.execute(query,(email))
@@ -115,10 +115,10 @@ def login_admin(senha, email):
         input()
         return 3       
 
-# ver todas as bases de datos creadas
+# ver todas as bases de dados criadas
 def ver_db(cursor):
     cursor.execute("SHOW DATABASES")
-    print("Bases de datos actuales:")
+    print("Bases de dados actuales:")
     
     for i in cursor:
         print("\n",i)
@@ -134,19 +134,19 @@ while True:
     #----------- MENU PRINCIPAL -----------#
     
     while True:
-        opcion = input_validation(3,"ingresa una de las siguientes opciones"
-                                 "\nVer peliculas    - 1"
-                                 "\nhacer login      - 2" 
-                                 "\ncrear una cuenta - 3")
+        opcion = input_validation(3,"ingresa uma das siguientes opçoens"
+                                 "\nVer filme    - 1"
+                                 "\nfazer login      - 2" 
+                                 "\ncriar uma conta - 3")
 
         if opcion   == 1: 
-            print("opcion en desarrollo")
+            print("opcaon em desenvolvimento")
             break
         elif opcion == 2: 
-            print("opcion en desarrollo")
+            print("opcaon em desenvolvimento")
             break
         elif opcion == 3:
-            print("Elije una das siguientes opcoes:\n")
+            print("Escolha uma das siguientes opcoes:\n")
             print("Administrador  - 1")
             print("Usuario normal - 2")
 
