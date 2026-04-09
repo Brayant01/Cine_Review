@@ -16,20 +16,28 @@ def input_validation(valor_max, mensagem):
 
    while True: 
         print(mensagem)
-        valor = int(input("opcao: "))
+        
+        try :
+            valor = int(input("opcao: "))
+            
+            if  valor > valor_max or valor < 1:
+                print("\ningresa um valor correcto")
+                input("presiona qualquer tecla para continuar\n")
+            else:
+                return valor
+        
+        except ValueError:
+            print("\nErro: debes ingresar un número válido")
+            input("Pressiona qualquer tecla para continuar\n")
 
-    
-        if  valor > valor_max or valor < 1:
-            print("\ningresa um valor correcto")
-            input("presiona qualquer tecla para continuar\n")
-        else:
-            return valor
+        
 
+#Cria um filme agregando ele na base de dados se nao entao devolve um error
 def create_filme(cursor, classificacao_indicativa):
     
-    titulo = str(input("\nIngrea o titulo do filme: ")).lower
-    ano_lancamento = str(input("\nIngresa o ano do lançamento: ")).lower
-    sinopse = str(input("\nIngresa uma sinpse: ")).lower
+    titulo = str(input("\nIngrea o titulo do filme: ")).lower()
+    ano_lancamento = str(input("\nIngresa o ano do lançamento: "))
+    sinopse = str(input("\nIngresa uma sinpse: "))
 
     try:
         query = "INSERT INTO filme (titulo, ano_lancamente, sinopse, classificacao_indicativa) VALUES (%s,%s,%s,%s)"
@@ -38,26 +46,17 @@ def create_filme(cursor, classificacao_indicativa):
         print("-------------- Filme criado --------------")
         print("voltando ao menu inicial favor de fazer login com a opçao 2")
     
-    except:
-        cursor.execute("create table filme("
-                       "id int primary key auto_increment not null,"
-                       "titulo varchar(255) not null,"
-                       "ano_lancamento year not null,"
-                       "sinopse text not null,"
-                       "classificacao_indicativa enum('L', '10', '12', '14', '16', '18') not null);")
+    except Exception as aux:
+        print("Error ao criar FILEM")
+        conexion_a_base_de_dados.rollback()
+
         
-        query = "INSERT INTO filme (titulo, ano_lancamente, sinopse, classificacao_indicativa) VALUES (%s,%s,%s,%s)"
-        cursor.execute(query, (titulo,ano_lancamento,sinopse,classificacao_indicativa))
-        conexion_a_base_de_dados.commit()
-        print("-------------- Filme criado --------------")
-        print("voltando ao menu inicial favor de fazer login com a opçao 2")
 
-
-#cria um usuario e agrega ele na base de datos, se nao existe a tabla crea uma de uma vez e agrega o usuario
+#cria um usuario e agrega ele na base de datos se nao entao devolve um error
 def criar_usuario(cursor, admin = 0):
-    nome  = str(input("\nIngresa teu Nome: ")).lower
-    senha = str(input("\nIngresa tua Senha: ")).lower
-    email = str(input("\nIngresa teu Email: ")).lower
+    nome  = str(input("\nIngresa teu Nome: ")).lower()
+    senha = str(input("\nIngresa tua Senha: "))
+    email = str(input("\nIngresa teu Email: ")).lower()
 
     try:
         query = "INSERT INTO usuario (nome,senha,email,admin) VALUES (%s,%s,%s,%s)"
@@ -66,19 +65,10 @@ def criar_usuario(cursor, admin = 0):
         print("------- Usuario criado ----------")
         print("voltando ao menu inicial favor de fazer login com a opçao 2")
 
-    except:
-        cursor.execute("CREATE TABLE usuario("
-                        "id int primary key auto_increment not null,"
-                        "nome varchar(150) not null,"
-                        "senha varchar(255) not null,"
-                        "email varchar(255) not null unique,"
-                        "admin tinyint(1) default 0);")
+    except Exception as e:
+        print("Error ao criar usuario", e)
+        conexion_a_base_de_dados.rollback()
         
-        query = "INSERT INTO usuario (nome,senha,email,admin) VALUES (%s,%s,%s,%s)"
-        cursor.execute(query, (nome,senha,email,admin))
-        conexion_a_base_de_dados.commit()
-        print("------- Usuario criado ----------")
-        print("voltando ao menu inicial favor de fazer login com a opçao 2")
 
 
 
@@ -86,25 +76,23 @@ def criar_usuario(cursor, admin = 0):
         
 def login_user(senha, email):
     
-    query = "SELECT senha FROM usuario WHERE email = %s"
+    query = "SELECT senha, admin FROM usuario WHERE email = %s"  #Verifica o valor senha e admin na db de usuario
+    
     cursor.execute(query,(email,))
+    resultado = cursor.fetchone()
 
-    resultado_busqueda = cursor.fetchone()
-
-    if not resultado_busqueda: #se nao tem usuario 
+    if not resultado: #se nao tem usuario devolve 0 e uma mensagem
         print("O usuario nao existe")
         return 0
     
-    if resultado_busqueda[0] != senha:
+    #pasa a senha_db o resuldado da consulta com o valor da senha na base de dados e o valor admin
+    senha_db, admin = resultado 
+
+    if senha_db[0] != senha:
         print("Senha incorrecta")
         return 0
-    
-    query = "SELECT admin FROM usuario WHERE email = %s"  #Verifica o valor de admin na db de usuario
-    cursor.execute(query,(email,))
 
-    resultado_busqueda = cursor.fetchone()
-
-    if resultado_busqueda[0] == 1: #se for admin = 1 entao devolve 2 (usuario admin)
+    if admin[0] == 1: #se for admin = 1 entao devolve 2 (usuario admin)
         print("O usuario é admin")
         return 2
     else:                          #se nao entao devolve 1 (usuario normal)
