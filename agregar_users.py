@@ -83,38 +83,34 @@ def criar_usuario(cursor, admin = 0):
 
 
 #valida o login do usuario pasando um de 3 valores
-def user_login(senha,email):
+        
+def login_user(senha, email):
     
     query = "SELECT senha FROM usuario WHERE email = %s"
     cursor.execute(query,(email,))
 
     resultado_busqueda = cursor.fetchone()
 
-    if resultado_busqueda: #verifica se tem ou nao um registro se nao devolve 0
-
-        if resultado_busqueda[0] == senha: #Se tem um registro verifica o valor com a senha ingresada
-            print("Bem vido")
-
-            query = "SELECT admin FROM usuario WHERE email = %s" #verifica o valor de admin
-            cursor.execute(query,(email,))
-
-            resultado_busqueda = cursor.fetchone()
-
-            if resultado_busqueda[0] == 1: #se for admin = 1 entao devolve 2 (usuario admin)
-                print("O usuario é admin")
-                return 2
-            else:                          #se nao entao devolve 1 (usuario normal)
-                print("Usuario nao admin")
-                return 1
-        else:                              # se a senha nao é igaul devolve 0 e uma mensagem
-            print("senha incorrecta")
-            return 0
-    else:
+    if not resultado_busqueda: #se nao tem usuario 
         print("O usuario nao existe")
         return 0
-        
-            
     
+    if resultado_busqueda[0] != senha:
+        print("Senha incorrecta")
+        return 0
+    
+    query = "SELECT admin FROM usuario WHERE email = %s"  #Verifica o valor de admin na db de usuario
+    cursor.execute(query,(email,))
+
+    resultado_busqueda = cursor.fetchone()
+
+    if resultado_busqueda[0] == 1: #se for admin = 1 entao devolve 2 (usuario admin)
+        print("O usuario é admin")
+        return 2
+    else:                          #se nao entao devolve 1 (usuario normal)
+        print("Usuario nao admin")
+        return 1
+
 #---------------------------!!!! FUNCOES PARA VER A BASE DE DADOS !!!!---------------------------#
 
 #verificar se pode-se criar a base de dados se no proba ver que bases de datos tem no sistema.
@@ -163,9 +159,10 @@ while True:
 
     elif opcion == 2: 
         print("---------------------- LOGIN ----------------------")
-        email = input("EMAIL: ").lower
-        senha = input("SENHA: ").lower
+        email = input("EMAIL: ").lower()
+        senha = input("SENHA: ")
 
+        login_user(senha,email)
         '''
         Se o usario for admin entao tem essas opçoes
 
