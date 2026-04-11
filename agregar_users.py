@@ -11,7 +11,7 @@ cursor = conexion_a_base_de_dados.cursor()
 
 #---------------- Funçoes do programa ;) ----------------#
 
-#validador de opciones com bucle infinito
+#validador de opcao com bucle infinito
 def input_validation(valor_max, mensagem):
 
    while True: 
@@ -29,8 +29,7 @@ def input_validation(valor_max, mensagem):
         except ValueError:
             print("\nErro: debes ingresar un número válido")
             input("Pressiona qualquer tecla para continuar\n")
-
-        
+    
 
 #Cria um filme agregando ele na base de dados se nao entao devolve um error
 def create_filme(cursor, classificacao_indicativa):
@@ -50,10 +49,9 @@ def create_filme(cursor, classificacao_indicativa):
         print("Error ao criar FILEM")
         conexion_a_base_de_dados.rollback()
 
-        
 
 #cria um usuario e agrega ele na base de datos se nao entao devolve um error
-def criar_usuario(cursor, admin = 0):
+def create_user(cursor, admin = 0):
     nome  = str(input("\nIngresa teu Nome: ")).lower()
     senha = str(input("\nIngresa tua Senha: "))
     email = str(input("\nIngresa teu Email: ")).lower()
@@ -69,9 +67,6 @@ def criar_usuario(cursor, admin = 0):
         print("Error ao criar usuario", e)
         conexion_a_base_de_dados.rollback()
         
-
-
-
 #valida o login do usuario pasando um de 3 valores
         
 def login_user(senha, email):
@@ -173,19 +168,19 @@ while True:
         print("Administrador  - 1")
         print("Usuario normal - 2")
 
-        x = int(input("opçao: "))
+        x = input_validation(2,"")
 
         if x == 1:
             print("Para criar uma conta de administrador ingresas as siguientes informacoes:")
-            acceso = input("Acceso admins: ").lower
-            senha  = input("Senhas admins: ").lower
+            acceso = input("Acceso admins: ").lower()
+            senha  = input("Senhas admins: ").lower()
 
             if acceso == "root" and senha == "123":
-                criar_usuario(cursor,1)
+                create_user(cursor,1)
                 
         else:
             print("ingresa as siguientes informacoes")
-            criar_usuario(cursor,0)
+            create_user(cursor,0)
             
 
 
