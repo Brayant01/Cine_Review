@@ -31,14 +31,14 @@ def menu_user_option(type_user,nome):
     
     # Se o usario for admin entao tem essas opçoes
     if(type_user == 1):
-        return "Benvido ",nome," escolhe uma das opçoes:\n 1- criar filme \n 2- modificar filme\n 3- criar categoria"
+        return "Benvido ",nome," escolhe uma das opçoes:\n1- criar filme \n2- modificar filme\n 3- criar categoria \n 4- voltar"
         
         #print("2- modificar login??")
     
     else:
         #se o usuario nao for admin entao tem essas opçoes
 
-        return "Benvido ",nome," escolhe uma das opçoes:1- ver filmes\n2- avaliar filme" 
+        return "Benvido ",nome," escolhe uma das opçoes:1- ver filmes\n2- avaliar filme \n3- voltar" 
         
         #print("3- modificar login??")
 
