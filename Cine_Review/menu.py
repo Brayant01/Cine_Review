@@ -27,10 +27,10 @@ def menu_ver_filme():
     print("---------------------- VER FILMES ----------------------")
     print("opcaon em desenvolvimento")
 
-def menu_user_option(user_type,nome):
+def menu_user_option(type_user,nome):
     
     # Se o usario for admin entao tem essas opçoes
-    if(user_type == 1):
+    if(type_user == 1):
         return "Benvido ",nome," escolhe uma das opçoes:\n 1- criar filme \n 2- modificar filme\n 3- criar categoria"
         
         #print("2- modificar login??")
