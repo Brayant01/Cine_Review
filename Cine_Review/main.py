@@ -1,6 +1,8 @@
 
 import db_management
 import menu
+import os
+
 
 #variavel global para clasificaçao indicativa
 classificacao_indicativa= {
@@ -18,7 +20,7 @@ cursor = conection_db.cursor()
 #---------------- MAIN PROGRAM :) ----------------#
 
 while True:
-    
+
     opcao = menu.main_menu()
 
     if opcao==1:# ver fimes
@@ -51,52 +53,65 @@ while True:
         '''
     
     elif opcao==2: #login
-        repetir = True
 
-        while repetir == True:
-
+        while True:  # bucle usado para manter o suario na parte de ingresar as informaçoes
             print("\nPara logar ingresa as siguiente informaçoes")
             email = input("Email: ").strip().lower()
             senha = input("Senha : ")
 
-            user_logado = db_management.login_user
+            user_logado = db_management.login_user(cursor,email,senha) #chama a funçao e guarda um dicionario con dados para verificar que o login foi certo ou nao
 
-            if user_logado["type_user"] == 1:
-                print("menu para admin")
-                mensagem = menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
-
-                """
-                    nesta parte do codigo temos que fazer a funcionadidades para o admin
-                    o administrador debe ter as siguiente 3 opçoes (a funçao menu.menu_user_option() ja imprime as 3 opçoes na tela)
-                    falta a logica, a funçao do menu so imprime na tela pode usar a funçao menu.nput_validation(numero de opçoes, mensajem a mostrar na tela)
-                    para validar o inputo do usuario e assim ele pode seleccionar uma das opçoes sem erros
-
-                    as opçoes do administrador:
-
-                    1- criar filme
-                    2- modificar filme
-                    3- criar categoria"
-                    4- voltar
-
-                    todas as funçoes desta parte do codigo ja foram criadas é so implementar
-
-                    o usuario pode nao querer mais continuar con estas opçao entao ele tem que voltar para o menu principal
-                """
+            if user_logado["status"]=="no_user": # se o usuario nao existe entao validar se o suario quer tentar novamente 
+                print("O usuario nao foi encontrado ou nao existe")
+                if menu.input_validation(2,"dejesa tentar novamente?\n1 - sim\n2 - não")== 2: break
             
-            if user_logado["type_user"] == 2:
-                print("menu usuario normal")
-                menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
+            elif user_logado["status"]=="senha_err": # se a senha esta errada entao validar se o suario quer tentar novamente 
+                print("Senha incorrecta")
+                if menu.input_validation(2,"dejesa tentar novamente?\n1 - sim\n2 - não")== 2: break
             
-                """as opçoes do usuario normal:
+            else:
+                break
 
-                    1- ver filmes -> esta opçao tem que cumplir con o da primera opçao do primer menu
-                    2- avaliar filmes
-                    4- voltar
 
-                    todas as funçoes desta parte do codigo ja foram criadas é so implementar
+        if user_logado["type_user"] == 1:
+            print("menu para admin")
+            mensagem = menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
 
-                    o usuario pode nao querer mais continuar con estas opçao entao ele tem que voltar para o menu principal
-                """
+            menu.input_validation(3,mensagem)
+
+            """
+                nesta parte do codigo temos que fazer a funcionadidades para o admin
+                o administrador debe ter as siguiente 3 opçoes (a funçao menu.menu_user_option() ja imprime as 3 opçoes na tela)
+                falta a logica, a funçao do menu so imprime na tela pode usar a funçao menu.nput_validation(numero de opçoes, mensajem a mostrar na tela)
+                para validar o inputo do usuario e assim ele pode seleccionar uma das opçoes sem erros
+
+                as opçoes do administrador:
+
+                1- criar filme
+                2- modificar filme
+                3- criar categoria"
+                4- voltar
+
+                todas as funçoes desta parte do codigo ja foram criadas é so implementar
+
+                o usuario pode nao querer mais continuar con estas opçao entao ele tem que voltar para o menu principal
+            """
+            
+        if user_logado["type_user"] == 2:
+            print("menu usuario normal")
+            menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
+            
+            """
+                as opçoes do usuario normal:
+
+                1- ver filmes -> esta opçao tem que cumplir con o da primera opçao do primer menu
+                2- avaliar filmes
+                4- voltar
+
+                todas as funçoes desta parte do codigo ja foram criadas é so implementar
+
+                o usuario pode nao querer mais continuar con estas opçao entao ele tem que voltar para o menu principal
+            """
 
     elif opcao==3: #criar conta
         while True:

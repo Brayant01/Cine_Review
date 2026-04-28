@@ -32,12 +32,9 @@ def login_user(cursor, email, senha_input):
         print("Senha incorrecta")
         return {"status": "senha_err"}
 
-    if type_user == 1: 
-        print("O usuario é admin")
-        return {"status":"ok", "id":id_user,"nome":nome, "type_user": type_user}
-    else:                         
-        print("Usuario nao admin")
-        return {"status":"ok", "id":id_user,"nome":nome, "type_user": type_user}
+    
+    print("O usuario foi logado")
+    return {"status":"ok", "id":id_user,"nome":nome, "type_user": type_user}
 
 
 #valida se pode o nao criar uma conta de administrador
