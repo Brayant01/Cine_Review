@@ -10,7 +10,7 @@ def input_validation(valor_max, mensagem):
         print(mensagem)
         
         try :
-            opcao = int(input("opcao: "))
+            opcao = int(input("\nopcao: "))
             
             if  opcao > valor_max or opcao < 1:
                 print("\ningresa um valor correcto")
@@ -31,14 +31,15 @@ def menu_user_option(type_user,nome):
     
     # Se o usario for admin entao tem essas opçoes
     if(type_user == 1):
-        return "Benvido ",nome," escolhe uma das opçoes:\n1- criar filme \n2- modificar filme\n 3- criar categoria \n 4- voltar"
+        print("-------------------- OPÇOES DE ADMINISTRADOR --------------------")
+        return f'''Benvido ",nome," escolhe uma das opçoes:\n1- criar filme \n2- modificar filme\n3- criar categoria\n4- voltar'''
         
         #print("2- modificar login??")
     
     else:
         #se o usuario nao for admin entao tem essas opçoes
-
-        return "Benvido ",nome," escolhe uma das opçoes:1- ver filmes\n2- avaliar filme \n3- voltar" 
+        print("-------------------- OPÇOES DE USUARIO --------------------")
+        return f'''Benvido "{nome}" escolhe uma das opçoes:1- ver filmes\n2- avaliar filme \n3- voltar'''
         
         #print("3- modificar login??")
 

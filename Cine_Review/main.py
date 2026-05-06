@@ -74,10 +74,19 @@ while True:
 
 
         if user_logado["type_user"] == 1:
-            print("menu para admin")
-            mensagem = menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
+            
+            while True:
+                mensagem = menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
+                opcao = menu.input_validation(3,mensagem)
 
-            menu.input_validation(3,mensagem)
+                if opcao == 1: 
+                    mensagem = f'''Para criar um filme seleciona uma das siguientes opçoes\n1 - [L]  para todu publico\n2 - [10] para maiores de 10\n3 - [12] para maiores de 12\n4 - [14] para maiores de 14\n5 - [16] para maiores de 16\n6 - [18] Maior de idade2'''
+                    input = menu.input_validation(6,mensagem)
+                    
+                    db_management.create_filme(cursor,conection_db,classificacao_indicativa[input])
+
+
+                    break
 
             """
                 nesta parte do codigo temos que fazer a funcionadidades para o admin

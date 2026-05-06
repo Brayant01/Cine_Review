@@ -50,6 +50,41 @@ def val_create_admin():
     
     return True
 
+#------------------- ver dados do banco de dados -------------------#
+
+def ver_filme(cursor):
+
+    try:
+        query= "SELECT id, nome, classificacao FROM filme"
+        cursor.execute(query)
+        return cursor.fetchall() #trai todos os filmes
+    except Exception as error:
+        print(f"\nERROR:{error}")
+        return error
+
+
+
+def buscar_filme(cursor, nome_busca):
+    try:
+        query = "SELECT id,nome, classificacao FROM filme WHERE nome is LIKE %s"
+        valor = f"%{nome_busca}%"
+
+        cursor.execute(query, (valor,))
+        return cursor.fetchall()
+    except Exception as error:
+        print(f"\nERROR:{error}")
+        return error
+    
+
+def ver_categoria(cursor):
+    try:
+        query = "SELECT id,genero FROM categoria"
+        cursor.execute(query)
+        return cursor.fetchall()
+    except Exception as error:
+        print(f"\nERROR:{error}")
+        return error
+    
 
 #------------------- agregar dados no banco de dados -------------------#
 
