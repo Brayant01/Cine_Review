@@ -41,3 +41,5 @@ create table avaliacao(
   foreign key(id_filme) references filme(id),
   unique (id_usuario, id_filme)
 );
+
+#Um pai perde ao amor da sua vida, depois dessa terrivel tragediadecide cuidar de sobre manera ao resultado do amor de ele e sua amada, nemo um peixe muito curioso, depois de um pequeno descuido o pai perde ao seu pequeno nemo e tera que procuralo pasando por muitas aventuras e personagems muito curiosos.
