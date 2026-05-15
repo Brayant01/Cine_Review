@@ -23,19 +23,27 @@ def input_validation(valor_max, mensagem):
             input("Pressiona qualquer tecla para continuar\n")
 
 #----------------- Opçoes do menu principal -----------------
-def ver_filmes(filmes_db,opcao): #filmes_db = id, titulo, nota, classificacao
-    print("---------------------- VER FILMES ----------------------")
+def ver_filmes(filmes_db): 
+    #filmes_db = id, titulo, nota, classificacao, ano_lancamento
+    print("=" *60, "\n"," "*20 + "LISTA DE FILMES\n", "=" * 60)
 
-    if opcao == 1:
-        for i, filme in enumerate(filmes_db,start=1):
-            id, titulo, nota, classificacao, *_ = filme
+    for i, filme in enumerate(filmes_db,start=1):
+        id, titulo, nota, classificacao, ano = filme
+        
+        if not nota:
+            texto_nota = "Sem avaleaçao"
+        else:
+            texto_nota = f"* {nota:.1f}"
 
-            print(f"{i} - {titulo} ({classificacao}) nota:{nota}")
-    else:
-        for i, filme in enumerate(filmes_db,start=1):
-            id, titulo, ano,sinopse = filme
-
-            print(f"{titulo} ({classificacao}) ano:{ano} \nSinopse: {sinopse}")
+        print(
+            f"{i:<2}. "
+            f"{titulo:<25} | "
+            f"{classificacao:<2} | "
+            f"{ano:<25} | "
+            f"{texto_nota}"
+            )
+    print("\n","="*60)
+            
 
 
 def select_filme(filmes_db):# orden de filme = id, titulo, nota, classificacao, sinopse
@@ -43,14 +51,10 @@ def select_filme(filmes_db):# orden de filme = id, titulo, nota, classificacao, 
     
     return filmes_db[selection-1]
 
-def ver_filme(filme, opcao):# orden de filme = id, titulo, nota, classificacao, sinopse
+def ver_filme(filme):# orden de filme = id, titulo, nota, classificacao, sinopse
+    id, titulo,nota, classificacao, sinopse = filme
+    print(f"{titulo} ({classificacao}) nota:{nota} \nSinopse: {sinopse}")
     
-    if opcao== 1:
-        id, titulo,nota, classificacao, sinopse = filme
-        print(f"{titulo} ({classificacao}) nota:{nota} \nSinopse: {sinopse}")
-    else:#id, titulo, ano_lancamento, sinopse
-        id, titulo, ano,sinopse = filme
-        print(f"{titulo} ({classificacao}) ano:{ano} \nSinopse: {sinopse}")
     
 
 def menu_mod_filme():
@@ -66,14 +70,15 @@ def menu_user_option(type_user,nome):
     # Se o usario for admin entao tem essas opçoes
     if(type_user == 1):
         print("-------------------- OPÇOES DE ADMINISTRADOR --------------------")
-        return f'''Benvido ",nome," escolhe uma das opçoes:\n1- criar filme \n2- modificar filme\n3- criar categoria\n4 - Sair'''
-        
+        print(f'''Benvido ",{nome}," escolhe uma das opçoes:\n1- criar filme \n2- modificar filme\n3- criar categoria\n4 - Sair''')
+        return input_validation(4,"")
         #print("2- modificar login??")
     
     else:
         #se o usuario nao for admin entao tem essas opçoes
         print("-------------------- OPÇOES DE USUARIO --------------------")
-        return f'''Benvido "{nome}" escolhe uma das opçoes:1- ver filmes\n2 - Buscar filme\n3 - Sair'''
+        print(f'''Benvido "{nome}" escolhe uma das opçoes:\n1- Ver todos os filmes\n2 - Buscar filme\n3 - ver top 5 *o*\n4 - Sair''')
+        return input_validation(4,"")
         
         #print("3- modificar login??")
 

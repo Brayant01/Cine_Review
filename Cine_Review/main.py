@@ -22,7 +22,7 @@ avaliacao= {
     "id_usuario": "NULL",
     "id_filme": "NULL",
     "nota": "NULL",
-    "comentario": "NULL",
+    "comentario": "NULL"
 }
 
 conection_db = db_management.conect_data_base()
@@ -37,16 +37,17 @@ while True:
     if opcao==1:# ver fimes
         while True:
             
-            opcao = menu.input_validation(2,"1 - Ver todos os Filme\n2 - Ver o TOP 5 *o*\n3 - Voltar")
+            opcao = menu.input_validation(31,"1 - Ver todos os Filme\n2 - Ver o TOP 5 *o*\n3 - Voltar")
 
             if opcao == 1:
                 filmes_db = db_management.Extrair_filmes(cursor,1)
+                print("filmes:",filmes_db)
                 menu.ver_filmes(filmes_db)
-                opcao = menu.input_validation(2,"Deseja ver mais de um dos filmes?")
+                opcao = menu.input_validation(2,"Deseja ver mais de um dos filmes?\n1 - SIM\n2 - NAO")
             elif opcao == 2:
-                filmes_db = db_management.top_five(cursor)
+                filmes_db = db_management.Extrair_filmes(cursor,2)
                 menu.ver_filmes(filmes_db)
-                opcao = menu.input_validation(2,"Deseja ver mais de um dos filmes?")
+                opcao = menu.input_validation(2,"Deseja ver mais de um dos filmes?\n1 - SIM\n2 - NAO")
             else:
                 print("voltando aou menu principal")
                 break
@@ -54,6 +55,7 @@ while True:
             if opcao == 1:
                 filme = menu.select_filme(filmes_db)
                 menu.ver_filme(filme)
+                input("precione qualquer tecla para voltar ao menu")
             else:
                 print("Voltando")
                 break
@@ -110,7 +112,7 @@ while True:
                     print("Escolha uma das siguientes opçoes:")
 
                     opçao = menu.input_validation(2,"1 - Modificar Tudo \n2 - Modificar uma das informaçoes")
-                    menu.ver_filmes(filmes_db,2)
+                    menu.ver_filmes(filmes_db)
 
                     if opcao == 2:
                         filme = menu.select_filme(filmes_db)
@@ -129,36 +131,36 @@ while True:
                     break
 
             
-        if user_logado["type_user"] == 2: #menu user
+        if user_logado["type_user"] == 0: #menu user
             while True:
                 print("menu usuario normal")
                 opcao = menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
             
-                if opcao == 1: #Ver filmes
+                if opcao == 1: #VER TODOS OS FILMES
                     while True:
-                        filmes_db = db_management.Extrair_filmes(cursor)
+                        filmes_db = db_management.Extrair_filmes(cursor,1)
                         menu.ver_filmes(filmes_db)
 
                         print("deseja ver mais de um dos filmes?")
 
-                        opcao = menu.input_validation(2,"1 - sim 2- nao (voltar)")
+                        opcao = menu.input_validation(2,"1 - sim \n2- nao (voltar)")
 
                         if opcao == 1:
                             filme = menu.select_filme(filmes_db) # orden de filme = id, titulo, nota, classificacao, sinopse
                             menu.ver_filme(filme)
-                            id_filme = filme[0]
                             opcao = menu.input_validation(2,"Deseja avaliar este filme?:\n1 - sim\n2 - voltar aos filmes\n3 - voltar ao menu")
 
-                            avaliacao["id_filme"] = id_filme
+                            avaliacao["id_filme"] = filme[0]
                             avaliacao["id_usuario"]= user_logado["id"]
 
                             if opcao == 1:
 
-                                if db_management.avaliacao_exist(cursor) == False:
+                                if not db_management.avaliacao_exist(cursor,user_logado["id"],filme[0]):
                                     print("ingresa as siguientes informaçoes:")
 
                                     avaliacao["nota"] = menu.input_validation(10,"Como foi o filme para você de 1 ao 10? 1 É Ruim :c e É 10 - Perfeitooo!!!)")
                                     avaliacao["comentario"] = input("Comentario: ")
+                                    print("fuera: ",avaliacao)
 
                                     db_management.create_avaliacao(cursor,conection_db,avaliacao)
                                 else:
@@ -166,6 +168,7 @@ while True:
                                     
                                     avaliacao["nota"] = menu.input_validation(10,"Como foi o filme para você de 1 ao 10? 1 É Ruim :c e É 10 - Perfeitooo!!!\nNota:)")
                                     avaliacao["comentario"] = input("Comentario: ")
+                                    print("fuera: ",avaliacao)
 
                                     db_management.update_avaliacao(cursor,conection_db,avaliacao)
                         
@@ -177,26 +180,24 @@ while True:
                             break
                         
 
-                elif opcao == 2: #buscar filmes
+                elif opcao == 2: #BUSCAR FILMES
 
                     buscar = input("Ingresa o nome do filme:")
 
                     filmes_db = db_management.buscar_filme(cursor,buscar)
                     menu.ver_filmes(filmes_db)
 
-                    filme = menu.select_filme(filmes_db)
-
-                    menu.ver_filme(filme)
-
                     print("deseja ver mais de um dos filmes?")
 
                     opcao = menu.input_validation(2,"1 - sim 2- nao (voltar)")
 
-                    if opcao == 1:
-                        filme = menu.select_filme(filmes_db) # orden de filme = id, titulo, nota, classificacao, sinopse
+                    if opcao == 1: 
+                        filme = menu.select_filme(filmes_db) 
                         menu.ver_filme(filme)
                         id_filme = filme[0]
+                        
                         opcao = menu.input_validation(2,"Deseja avaliar este filme?:\n1 - sim\n2 - voltar aos filmes\n3 - voltar ao menu")
+                        
                         if opcao == 1:
                             
                             avaliacao["id_filme"] = id_filme
@@ -205,13 +206,13 @@ while True:
                             if db_management.avaliacao_exist(cursor) == False:
                                 print("ingresa as siguientes informaçoes:")
 
-                                avaliacao["nota"] = menu.input_validation(10,"Como foi o filme para você de 1 ao 10? 1 É Ruim :c e É 10 - Perfeitooo!!!\nNota:)")
+                                avaliacao["nota"] = menu.input_validation(10,"Como foi o filme para você de 1 ao 10? \n1 É Ruim :c e É 10 - Perfeitooo!!!)")
                                 avaliacao["comentario"] = input("Comentario: ")
 
                                 db_management.create_avaliacao(cursor,conection_db,avaliacao)
                             else:
                                 print("ingresa as siguientes informaçoes:")
-                                avaliacao["nota"] = menu.input_validation(10,"Como foi o filme para você de 1 ao 10? 1 É Ruim :c e É 10 - Perfeitooo!!!\nNota:)")
+                                avaliacao["nota"] = menu.input_validation(10,"Como foi o filme para você de 1 ao 10? \n1 É Ruim :c e É 10 - Perfeitooo!!!)")
                                 avaliacao["comentario"] = input("Comentario: ")
 
                                 db_management.update_avaliacao(cursor,conection_db,avaliacao)
@@ -222,9 +223,9 @@ while True:
                         print("voltanto aos filmes")
                     else:
                         break
-                elif opcao == 3:
+                elif opcao == 3: #VER TOP FIVE 
                     
-                    filmes_db = db_management.top_five(cursor)
+                    filmes_db = db_management.Extrair_filmes(cursor)
                     menu.ver_filmes(filmes_db)
                     opcao = menu.input_validation(2,"Deseja ver mais de um dos filmes?")
 
@@ -255,20 +256,9 @@ while True:
                             avaliacao["comentario"] = input("Comentario: ")
 
                             db_management.update_avaliacao(cursor,conection_db,avaliacao)
-
-
-
-            """
-                as opçoes do usuario normal:
-
-                1- ver filmes - pronto :)
-                2- buscar filme - pronto :)
-                3- voltar - pronto :)
-
-                todas as funçoes desta parte do codigo ja foram criadas é so implementar
-
-                o usuario pode nao querer mais continuar con estas opçao entao ele tem que voltar para o menu principal
-            """
+                else:
+                    print("VOLTE PRONTOOOOOO!!!!")
+                    break
 
     elif opcao==3: #criar conta
         while True:

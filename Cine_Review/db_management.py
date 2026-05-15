@@ -78,69 +78,42 @@ def mod_filme(cursor,conection_db, id_filme, opcao, type_mod):
         conection_db.rollback()
         print("error ao modificar o filme",error)
 
-def update_avaliacao(cursor, conection_db, nova_avaliacao):
-    try:
-        query = "UPDATE avaliacao SET nota = %s, comentario = %s WHERE id_usuario = %s, id_filme = %s"
-
-        cursor.execute(query, nova_avaliacao["nota"], nova_avaliacao["comentario"], nova_avaliacao["id_usuario"], nova_avaliacao["id_filme"])
-        
-        conection_db.commit()
-
-        print("SUA AVALEAÇAO FOI ACTUALIZADA!!!")
-        return True
-    except Exception as error:
-        print("Nao foi possivel fazer esta avaleaçao")
-        conection_db.rollback()
-        print(error)
-        
-        return error 
-
 #------------------- ver dados do banco de dados -------------------#
-
-def top_five(cursor):
-    query = '''
-        SELECT filme.id, filme.titulo, AVG(avaleacao.nota) AS nota, filme.classificacao_indicativa, filme.sinopse  FROM filme
-        FROM filme
-
-        JOIN avaliacao
-        ON filme.id = avaliacao.id_filme
-
-        GROUP BY filme.id
-
-        ORDER BY media DESC
-        LIMIT 5
-        '''
-    try:
-        cursor.execute(query)
-        return cursor.fetchall()
-    except Exception as error:
-        print(error)
-        return error
 
 
 def Extrair_filmes(cursor, opcao):
 
     if opcao == 1:
         query='''
-            SELECT filme.id, filme.titulo, AVG(avaleacao.nota) AS nota, filme.classificacao_indicativa, filme.sinopse  FROM filme
-            LEFT JOIN avaleacao
-            ON filme.id = avaleacao.id_filme
+            SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento  FROM filme
+            LEFT JOIN avaliacao
+            ON filme.id = avaliacao.id_filme
             GROUP BY filme.id
             ORDER BY filme.titulo
         '''
     else:
-        query="SELECT id, titulo, ano_lancamento, sinopse FROM filme"
+        query='''
+            SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento  FROM filme
+
+            LEFT JOIN avaliacao
+            ON filme.id = avaliacao.id_filme
+
+            GROUP BY filme.id
+
+            ORDER BY nota DESC
+            LIMIT 5
+        '''
 
     try:    
         cursor.execute(query)
         return cursor.fetchall() #trai todos os filmes
-    except Exception as error:
-        print(f"\nERROR:{error}")
-        return error
+    except mysql.connector.Error as error:
+        print("ERROR:", error)
+        return []
 
 def buscar_filme(cursor, nome_busca):
     try:
-        query = "SELECT id,nome, classificacao FROM filme WHERE nome is LIKE %s"
+        query = "SELECT id, titulo, classificacao_indicativa, ano_lancamento, sinopse FROM filme WHERE titulo LIKE %s"
         valor = f"%{nome_busca}%"
 
         cursor.execute(query, (valor,))
@@ -199,30 +172,50 @@ def create_usuario(cursor, conection_db, type_user = 0):
         conection_db.rollback()
         return error
 
-#Cria uma avaliaçao e agrega ela na base de dados
+#fuçoes para as avaleacoes
 
 def avaliacao_exist(cursor, id_user, id_filme):
 
     query = "SELECT id FROM avaliacao WHERE id_usuario = %s AND id_filme = %s"
 
     cursor.execute(query,(id_user,id_filme))
+    
+    resultado = cursor.fetchone()
+    print("aqui esta el peo:", resultado)
 
-    return cursor.fetchone()
+    return resultado
 
-def create_avaliaçao(cursor, conection_db, avaliacao):
+def create_avaliacao(cursor, conection_db, avaliacao):
 
     try:
-        query = "INCERT INTO avaliacao (id_usuario, id_filme,nota,comentario) VALUES %s,%s,%s,%s"
-
-        cursor.execute(query, avaliacao["id_usuario"], avaliacao["id_filme"], avaliacao["nota"], avaliacao["comentario"] )
-        
+        query = '''INSERT INTO avaliacao (id_usuario, id_filme, nota, comentario) VALUES (%(id_usuario)s, %(id_filme)s, %(nota)s, %(comentario)s)'''
+        cursor.execute(query, avaliacao)
         conection_db.commit()
 
         print("obrigado por avaliar este filme!!!")
         return True
     except Exception as error:
         print("Nao foi possivel fazer esta avaleaçao")
+        print("error:",error)
         conection_db.rollback()
+        return error 
+
+def update_avaliacao(cursor, conection_db, nova_avaliacao):
+    try:
+        query = "UPDATE avaliacao SET nota = %s, comentario = %s WHERE id_usuario = %s AND id_filme = %s"
+
+
+        cursor.execute(query, nova_avaliacao)
+        
+        conection_db.commit()
+
+        print("SUA AVALEAÇAO FOI ACTUALIZADA!!!")
+        return True
+    except Exception as error:
+        print("Nao foi possivel fazer esta avaleaçao")
+        conection_db.rollback()
+        print(error)
+        
         return error 
 
 #Cria uma categodia e agrega ela na base de dados
@@ -260,18 +253,3 @@ def create_film_cat(cursor, conection_db, id_filme,id_categoria):
         conection_db.rollback()
         return error
 
-#cria uma avaliaçao pelo usuario e agrega ela na basse de dados
-def create_avaliacao(cursor, conection_db, id_usuario, id_filme,nota,comentario):
-
-    try:
-        query = "INSERT INTO avaliacao (id_usuario, id_filme, nota, comentario) VALUES (%s,%s,%s,%s)"
-        cursor.execute(query,id_usuario,id_filme,nota,comentario)
-        conection_db.commit()
-        print("------- avaliaçao agregada neste Filme ;) ----------")
-        print("voltando ao menu")
-        return True
-    
-    except Exception as error:
-        print("Error ao agrgar esta avaliaçao", error)
-        conection_db.rollback()
-        return error

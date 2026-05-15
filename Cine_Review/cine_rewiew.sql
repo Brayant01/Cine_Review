@@ -42,4 +42,75 @@ create table avaliacao(
   unique (id_usuario, id_filme)
 );
 
-#Um pai perde ao amor da sua vida, depois dessa terrivel tragediadecide cuidar de sobre manera ao resultado do amor de ele e sua amada, nemo um peixe muito curioso, depois de um pequeno descuido o pai perde ao seu pequeno nemo e tera que procuralo pasando por muitas aventuras e personagems muito curiosos.
+
+INSERT INTO filme(titulo, ano_lancamento, sinopse, classificacao_indicativa)
+VALUES 
+(
+'A Última Fronteira', 
+2021,
+'Um ex-soldado precisa atravessar uma cidade destruída para salvar sua família durante uma guerra civil.',
+'16'
+),
+
+(
+'Estrelas do Amanhã',
+2019,
+'Um grupo de crianças descobre um observatório abandonado e começa uma aventura pelo universo.',
+'L'
+),
+
+(
+'Código Fantasma',
+2023,
+'Um jovem programador encontra um algoritmo misterioso capaz de invadir qualquer sistema do mundo.',
+'14'
+),
+
+(
+'Noite Sem Volta',
+2020,
+'Após testemunhar um crime, uma jornalista é perseguida por uma organização criminosa.',
+'18'
+),
+
+(
+'O Jardim de Elisa',
+2018,
+'Uma garota tímida encontra um jardim mágico capaz de realizar pequenos desejos.',
+'10'
+),
+
+(
+'Horizonte Vermelho',
+2024,
+'Colonizadores em Marte enfrentam uma ameaça desconhecida escondida abaixo da superfície do planeta.',
+'16'
+),
+
+(
+'Sombras da Cidade',
+2022,
+'Um detetive investiga desaparecimentos misteriosos ligados ao submundo da cidade.',
+'14'
+),
+
+(
+'Velocidade Máxima',
+2017,
+'Um piloto iniciante tenta vencer o campeonato nacional de corrida enquanto enfrenta rivais experientes.',
+'12'
+),
+
+(
+'Além do Tempo',
+2021,
+'Dois estudantes encontram um relógio antigo capaz de voltar alguns minutos no passado.',
+'10'
+),
+
+(
+'Operação Eclipse',
+2025,
+'Uma equipe secreta tenta impedir um ataque internacional que ameaça milhões de pessoas.',
+'18'
+);
