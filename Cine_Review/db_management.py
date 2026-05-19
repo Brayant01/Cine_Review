@@ -113,8 +113,10 @@ def Extrair_filmes(cursor, opcao):
             JOIN categoria
             ON categoria.id = film_cat.id_categoria
 
-            where categoria.genero = %s
+            WHERE categoria.genero = %s
 
+            GROUP BY filme.id
+            ORDER BY filme.titulo
         '''
         try:    
             cursor.execute(query,(opcao,))

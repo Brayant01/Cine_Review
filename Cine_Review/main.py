@@ -39,19 +39,19 @@ while True:
             
             opcao = menu.option_validation(1)
 
-            if opcao == 1:
+            if opcao == 1: #ver todos os filmes
                 
                 filmes_db = db_management.Extrair_filmes(cursor,"todos")
                 menu.ver_filmes(filmes_db)
                 opcao = menu.option_validation(2)
 
-            elif opcao == 2:
+            elif opcao == 2: #ver o top 5
 
                 filmes_db = db_management.Extrair_filmes(cursor,"top5")
                 menu.ver_filmes(filmes_db)
                 opcao = menu.option_validation(2)
 
-            elif opcao == 3:
+            elif opcao == 3: #ver por categoria
                 
                 categorias_db = db_management.Extrair_categoria(cursor)
                 menu.ver_categorias(categorias_db)
