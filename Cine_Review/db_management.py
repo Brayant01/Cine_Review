@@ -25,9 +25,6 @@ def login_user(cursor, email, senha_input):
     #pasa a senha_db o resuldado da consulta com o valor da senha na base de dados e o valor admin
     id_user, nome, senha_db, type_user = resultado 
 
-    #print("id:",id_user," senha:",senha_db," user type:",user_type," nome:", nome)
-    print("id: senha:",senha_db)
-
     if senha_db != senha_input:
         print("Senha incorrecta")
         return {"status": "senha_err"}
@@ -82,18 +79,18 @@ def mod_filme(cursor,conection_db, id_filme, opcao, type_mod):
 
 
 def Extrair_filmes(cursor, opcao):
-
-    if opcao == 1:
+#filmes_db = id, titulo, nota, classificacao, ano_lancamento
+    if opcao == "todos":
         query='''
-            SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento  FROM filme
+            SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento, sinopse  FROM filme
             LEFT JOIN avaliacao
             ON filme.id = avaliacao.id_filme
             GROUP BY filme.id
             ORDER BY filme.titulo
         '''
-    else:
+    elif opcao == "top5":
         query='''
-            SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento  FROM filme
+            SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento, sinopse  FROM filme
 
             LEFT JOIN avaliacao
             ON filme.id = avaliacao.id_filme
@@ -103,6 +100,29 @@ def Extrair_filmes(cursor, opcao):
             ORDER BY nota DESC
             LIMIT 5
         '''
+    else:
+        query = '''
+            SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento, sinopse  FROM filme
+
+            LEFT JOIN avaliacao
+            ON filme.id = avaliacao.id_filme
+
+            JOIN film_cat
+            ON filme.id = film_cat.id_filme
+
+            JOIN categoria
+            ON categoria.id = film_cat.id_categoria
+
+            where categoria.genero = %s
+
+        '''
+        try:    
+            cursor.execute(query,(opcao,))
+            return cursor.fetchall() #trai todos os filmes
+        except mysql.connector.Error as error:
+            print("ERROR:", error)
+            return []
+
 
     try:    
         cursor.execute(query)
@@ -123,7 +143,7 @@ def buscar_filme(cursor, nome_busca):
         return error
     
 
-def ver_categoria(cursor):
+def Extrair_categoria(cursor):
     try:
         query = "SELECT id,genero FROM categoria"
         cursor.execute(query)

@@ -42,7 +42,6 @@ create table avaliacao(
   unique (id_usuario, id_filme)
 );
 
-
 INSERT INTO filme(titulo, ano_lancamento, sinopse, classificacao_indicativa)
 VALUES 
 (
@@ -114,3 +113,59 @@ VALUES
 'Uma equipe secreta tenta impedir um ataque internacional que ameaça milhões de pessoas.',
 '18'
 );
+
+INSERT INTO categoria (genero)
+VALUES
+('Ação'),
+('Ficção Científica'),
+('Drama'),
+('Suspense'),
+('Terror'),
+('Comédia'),
+('Romance'),
+('Aventura'),
+('Fantasia'),
+('Mistério');
+
+INSERT INTO film_cat (id_filme, id_categoria)
+VALUES
+
+-- A Última Fronteira
+(1, 1),
+(1, 8),
+
+-- Além do Tempo
+(2, 7),
+(2, 2),
+
+-- Código Fantasma
+(3, 2),
+(3, 4),
+
+-- Estrelas do Amanhã
+(4, 9),
+(4, 8),
+
+-- Horizonte Vermelho
+(5, 1),
+(5, 3),
+
+-- Noite Sem Volta
+(6, 5),
+(6, 4),
+
+-- O Jardim de Elisa
+(7, 3),
+(7, 7),
+
+-- Operação Eclipse
+(8, 1),
+(8, 2),
+
+-- Sombras da Cidade
+(9, 10),
+(9, 4),
+
+-- Velocidade Máxima
+(10, 1),
+(10, 8);

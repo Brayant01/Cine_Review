@@ -37,17 +37,30 @@ while True:
     if opcao==1:# ver fimes
         while True:
             
-            opcao = menu.input_validation(31,"1 - Ver todos os Filme\n2 - Ver o TOP 5 *o*\n3 - Voltar")
+            opcao = menu.option_validation(1)
 
             if opcao == 1:
-                filmes_db = db_management.Extrair_filmes(cursor,1)
-                print("filmes:",filmes_db)
+                
+                filmes_db = db_management.Extrair_filmes(cursor,"todos")
                 menu.ver_filmes(filmes_db)
-                opcao = menu.input_validation(2,"Deseja ver mais de um dos filmes?\n1 - SIM\n2 - NAO")
+                opcao = menu.option_validation(2)
+
             elif opcao == 2:
-                filmes_db = db_management.Extrair_filmes(cursor,2)
+
+                filmes_db = db_management.Extrair_filmes(cursor,"top5")
                 menu.ver_filmes(filmes_db)
-                opcao = menu.input_validation(2,"Deseja ver mais de um dos filmes?\n1 - SIM\n2 - NAO")
+                opcao = menu.option_validation(2)
+
+            elif opcao == 3:
+                
+                categorias_db = db_management.Extrair_categoria(cursor)
+                menu.ver_categorias(categorias_db)
+                categoria = menu.select_categoria(categorias_db)
+
+                filmes_db = db_management.Extrair_filmes(cursor,categoria[1])
+                menu.ver_filmes(filmes_db)
+                opcao = menu.option_validation(2)
+
             else:
                 print("voltando aou menu principal")
                 break
@@ -64,20 +77,26 @@ while True:
     elif opcao==2: #login
 
         while True:  # bucle usado para manter o suario na parte de ingresar as informaçoes
-            print("\nPara logar ingresa as siguiente informaçoes")
+            print("\n")
+            print("="*60,"\nPara logar ingresa as siguiente informaçoes",)
+            print("="*60,"\n")
+
             email = input("Email: ").strip().lower()
             senha = input("Senha : ")
 
             user_logado = db_management.login_user(cursor,email,senha) #chama a funçao e guarda um dicionario con dados para verificar que o login foi certo ou nao
 
             if user_logado["status"] == "no_user": # se o usuario nao existe entao validar se o suario quer tentar novamente 
-                print("O usuario nao foi encontrado ou nao existe")
-                if menu.input_validation(2,"dejesa tentar novamente?\n1 - sim\n2 - não")== 2: break
+
+                if menu.option_validation(3)== 2: 
+                    user_logado["type_user"] = "none"
+                    break
             
             elif user_logado["status"] == "senha_err": # se a senha esta errada entao validar se o suario quer tentar novamente 
-                print("Senha incorrecta")
-                if menu.input_validation(2,"dejesa tentar novamente?\n1 - sim\n2 - não")== 2: break
-            
+
+                if menu.option_validation(3)== 2: 
+                    user_logado["type_user"] = "none"
+                    break
             else:
                 break
 
@@ -86,32 +105,26 @@ while True:
             
 
             while True:
-                while True:
-                    mensagem = menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
-                    opcao = menu.input_validation(3,mensagem)
-
-                    break
+                
+                opcao = menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
 
                 if opcao == 1: #criar filme
                     while True:
-                        mensagem = f'''Para criar um filme seleciona uma das siguientes opçoes\n1 - [L]  para todu publico\n2 - [10] para maiores de 10\n3 - [12] para maiores de 12\n4 - [14] para maiores de 14\n5 - [16] para maiores de 16\n6 - [18] Maior de idade2'''
-                        opcao = menu.input_validation(6,mensagem)
-                    
+                        opcao = menu.option_validation(4)
+
                         db_management.create_filme(cursor,conection_db,classi_indicativa[opcao])
 
-                        opcao = menu.input_validation(2,"Deseja criar outro filme?")
+                        opcao = menu.option_validation(5)
 
                         if opcao== 2:
-                            print("Voltando ")
+                            print("\n🔄 Voltando ao menu...\n")
                             break
 
 
                 elif opcao == 2: #modificar filme
-                    filmes_db = db_management.Extrair_filmes(cursor,2)
+                    filmes_db = db_management.Extrair_filmes(cursor,"todos")
 
-                    print("Escolha uma das siguientes opçoes:")
-
-                    opçao = menu.input_validation(2,"1 - Modificar Tudo \n2 - Modificar uma das informaçoes")
+                    opcao = menu.option_validation(6)
                     menu.ver_filmes(filmes_db)
 
                     if opcao == 2:
@@ -133,15 +146,12 @@ while True:
             
         if user_logado["type_user"] == 0: #menu user
             while True:
-                print("menu usuario normal")
                 opcao = menu.menu_user_option(user_logado["type_user"],user_logado["nome"])
             
                 if opcao == 1: #VER TODOS OS FILMES
                     while True:
-                        filmes_db = db_management.Extrair_filmes(cursor,1)
+                        filmes_db = db_management.Extrair_filmes(cursor,"todos")
                         menu.ver_filmes(filmes_db)
-
-                        print("deseja ver mais de um dos filmes?")
 
                         opcao = menu.input_validation(2,"1 - sim \n2- nao (voltar)")
 
@@ -225,7 +235,7 @@ while True:
                         break
                 elif opcao == 3: #VER TOP FIVE 
                     
-                    filmes_db = db_management.Extrair_filmes(cursor)
+                    filmes_db = db_management.Extrair_filmes(cursor,"top5")
                     menu.ver_filmes(filmes_db)
                     opcao = menu.input_validation(2,"Deseja ver mais de um dos filmes?")
 
@@ -264,9 +274,9 @@ while True:
         while True:
             if menu.menu_criar_conta() == 1:
                 if db_management.val_create_admin() == False:
-                    if menu.input_validation(2,"Deseja tentar novamente?\nSim --> 1\nNão --> 2")==2:
-                        repetir = False
+                    if menu.option_validation(3)==2:
                         print("vontando ao menu inicial")
+                        break
                 else:
                     db_management.create_usuario(cursor,conection_db,1)
                     break
