@@ -20,7 +20,7 @@ def input_validation(valor_max, mensagem):
         
         except ValueError:
             print("\n" + "=" * 60)
-            print("\n⚠️ Entrada inválida!")
+            print("\n⚠️  !Entrada inválida!")
             print("Digite apenas números válidos.\n")
 
             input("Pressione ENTER para continuar...")
@@ -80,7 +80,7 @@ def option_validation(aux):
     elif aux == 5:
         mensagem= (
         "\n============================================================\n"
-        "\n               🎬 Deseja criar outro filme?\n"
+        "\n               🎬 Deseja agregar outro filme?\n"
         "[1] Sim\n"
         "[2] Não\n"
         "\n============================================================"
@@ -123,7 +123,7 @@ def ver_filmes(filmes_db):
     print("\n","="*60 + "\n")
             
 def ver_categorias(categorias):
-    print("=" *60, "\n"," "*20 + "LISTA DE FILMES\n", "="*60)
+    print("=" *60, "\n"," "*20 + "LISTA DE CATEGORIAS\n", "="*60)
 
     for i, categoria in enumerate(categorias,start=1):
         id, genero = categoria
@@ -167,16 +167,16 @@ def ver_filme(filme):# orden de filme = id, titulo, nota, classificacao, sinopse
 def menu_mod_filme():
     
     mensagem = (
-        "============================================================"
-        "             MODIFICAR FILME"
-        "============================================================"
+        "============================================================\n"
+        "                      MODIFICAR FILME\n"
+        "============================================================\n"
 
-        "Escolha uma informação para modificar:"
+        "Escolha uma informação para modificar:\n"
 
-        "[1] Nome"
-        "[2] Classificação"
-        "[3] Sinopse"
-        "============================================================")
+        "[1] Nome\n"
+        "[2] Classificação\n"
+        "[3] Sinopse\n"
+        "============================================================\n")
 
     return input_validation(3, mensagem)
 
@@ -186,42 +186,44 @@ def menu_user_option(type_user,nome):
     # Se o usario for admin entao tem essas opçoes
     if(type_user == 1):
 
-        mensagem= f'''
-============================================================
-                OPÇOES DE ADMINISTRADOR
-============================================================
-              
-Benvido ",{nome}," escolhe uma das opçoes:
-[1] criar filme 
-[2] modificar filme
-[3] criar categoria
-[4] Sair
-============================================================
-'''
+        mensagem=(
+            "============================================================\n"
+            "                   OPÇOES DE ADministrador\n"
+            "============================================================\n"
+
+            f"Benvido {nome} escolhe uma das opçoes:\n"
+            "[1] Criar filme \n"
+            "[2] Modificar/Eliminar filme\n"
+            "[3] Criar categoria\n"
+            "[4] Agregar Filmes em categoria\n"
+            "[5] Sair\n"
+            "============================================================\n"
+        )
+
         return input_validation(4,mensagem)
         #print("2- modificar login??")
     
     else:
         #se o usuario nao for admin entao tem essas opçoes
     
-        mensagem=f'''
-============================================================
-                OPÇOES DE USUARIO
-============================================================
+        mensagem=(
+            "============================================================\n"
+            "                       OPÇOES DE USUARIO\n"
+            "============================================================\n"
 
-Benvido "{nome}" escolhe uma das opçoes:
-[1] Ver todos os filmes
-[2] Buscar filme
-[3] ver top 5 *o*
-[4] Sair
-============================================================
-'''
+            f"Benvido {nome} escolhe uma das opçoes:\n"
+            "[1] Ver todos os filmes\n"
+            "[2] Buscar filme\n"
+            "[3] ver top 5 *o*\n"
+            "[4] Sair\n"
+            "============================================================\n"
+        )
         return input_validation(4,mensagem)
         
 #---------------------------------------------------------------------------
 def menu_criar_conta():
     mensagem =(
-    "\n============================================================\n"
+    f"\n============================================================\n"
     "                         CRIAR CONTA\n"
     "============================================================\n\n"
 
@@ -245,9 +247,10 @@ def main_menu():
     "Escolha uma das opções abaixo:\n\n"
     "[1] Ver filmes\n"
     "[2] Fazer login\n"
-    "[3] Criar uma conta\n\n"
+    "[3] Criar uma conta\n"
+    "[4] Sair\n"
     "============================================================"
     )
 
-    opcaon = input_validation(3,mensagem)    
+    opcaon = input_validation(4,mensagem)    
     return opcaon

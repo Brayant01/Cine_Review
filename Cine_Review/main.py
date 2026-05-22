@@ -114,10 +114,8 @@ while True:
 
                         db_management.create_filme(cursor,conection_db,classi_indicativa[opcao])
 
-                        opcao = menu.option_validation(5)
-
-                        if opcao== 2:
-                            print("\n🔄 Voltando ao menu...\n")
+                        if menu.option_validation(5) != 1:
+                            print("\n🔄  Voltando ao menu...\n")
                             break
 
 
@@ -140,9 +138,28 @@ while True:
             
                 elif opcao == 3: #criar categoria
                     db_management.create_categoria(cursor, conection_db)
+                
+                elif opcao == 4: # falta hacer la parte para "agregar" el filme en la categoria
+                    categorias_db = db_management.Extrair_categoria(cursor)
+                    menu.ver_categorias(categorias_db)
+                    categoria = menu.select_categoria(categorias_db)
+
+                    filmes_db = db_management.Extrair_filmes(cursor,"todos")
+                    
+                    while True:
+                        menu.ver_filmes(filmes_db)
+                        filme = menu.select_filme(filmes_db)
+                        
+                        if db_management.create_film_cat(cursor, conection_db, filme[0], categoria[0]) != True:
+                            if menu.option_validation(3) == 2:
+                                print("\n🔄  Voltando ao menu...\n")
+                                break
+                        else:
+                            if menu.option_validation(5) != 1:
+                                print("\n🔄  Voltando ao menu...\n")
+                                break
                 else:
                     break
-
             
         if user_logado["type_user"] == 0: #menu user
             while True:
@@ -286,6 +303,7 @@ while True:
 
               
     else:
+        conection_db.close()
         print("Obridado por usar nosso serviço ate mais!!!!")
         break
 

@@ -171,8 +171,10 @@ def create_filme(cursor, conection_db, classificacao_indicativa):
         print("-------------- Filme criado --------------")
         print("voltando ao menu inicial favor de fazer login com a opçao 2")
         return True
-    except Exception as error:
-        print("Error ao criar FILME",error)
+    except mysql.connector.Error as error:
+        if error == 1062:
+            print("ESTE FILME JA FOI AGREGADO NA CATEGORIA ESCOLHIDA")
+        
         conection_db.rollback()
         return error
 
@@ -254,7 +256,6 @@ def create_categoria(cursor, conection_db):
         print("voltando ao menu")
         return True
     except Exception as error:
-        print("Error ao criar a categoria", error)
         conection_db.rollback()
         return error
     
@@ -264,7 +265,7 @@ def create_film_cat(cursor, conection_db, id_filme,id_categoria):
 
     try:
         query = "INSERT INTO film_cat (id_filme,id_categoria) VALUES (%s,%s)"
-        cursor.execute(query,id_filme,id_categoria)
+        cursor.execute(query,(id_filme,id_categoria))
         conection_db.commit()
         print("------- Filme agregado nesta categoria ----------")
         print("voltando ao menu")
