@@ -122,7 +122,6 @@ def ver_filmes(filmes_db):
         if not nota:
             texto_nota = f"😔 Sem avaleaçao"
         else:
-            print("Nota: ",nota)
             texto_nota = f"⭐ {nota:.1f} / 10"
 
         print(
