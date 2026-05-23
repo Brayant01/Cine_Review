@@ -49,23 +49,31 @@ def val_create_admin():
 
 #------------------- modificar dados do banco de dados -------------------#
 
-def mod_filme(cursor,conection_db, id_filme, opcao, type_mod):
+def mod_filme(cursor,conection_db, id_filme, opcao_mod, nova_class,type_mod):
     
     try:
 
-        if type_mod == 2:
-            print(f"Ingresa a nova informaçao para {opcao}")
-            modificacao = input(f"Novo/a {opcao}: ")
-
-            query = f"UPDATE filme {opcao} = %s WHERE id = %s"
-            cursor.execute(query,modificacao,id_filme)
-        else:
+        if type_mod == 1: #Modificar todo o filme
             nome = input("Ingressa o novo nome:")
-            classificacao = input("Ingressa o novo nome:")
-            sinopse = input("Ingressa o novo nome:")
+            print("Nova calificaçao: ", nova_class)
+            sinopse = input("Ingressa a nova sinpse:")
 
-            query = "UPDATE filme titulo = %s, cassificacao_indicativa = %s, sinopse = %s WHERE id = %s"
-            cursor.execute(query,nome, classificacao, sinopse, id_filme)
+            query = "UPDATE filme SET titulo = %s, cassificacao_indicativa = %s, sinopse = %s WHERE id = %s"
+            cursor.execute(query,(nome, nova_class, sinopse, id_filme))
+
+        else: #modificar uma parte do filme
+            if opcao_mod == "classificaçao":
+                print("classificaçao :)")
+                query = "UPDATE filme SET classificacao_indicativa = %s WHERE id = %s"
+                cursor.execute(query,(nova_class,id_filme))
+                print("Classificaçao modificada")
+            else:
+                print(f"Ingresa a nova informaçao para @ {opcao_mod}")
+                modificacao = input(f"Novo/a {opcao_mod}: ")
+
+                query = f"UPDATE filme SET {opcao_mod} = %s WHERE id = %s"
+                cursor.execute(query,(modificacao,id_filme))
+            
     
         conection_db.commit()
         print("Modificaçao feita con susesso!!!")
@@ -80,7 +88,7 @@ def mod_filme(cursor,conection_db, id_filme, opcao, type_mod):
 
 def Extrair_filmes(cursor, opcao):
 #filmes_db = id, titulo, nota, classificacao, ano_lancamento
-    if opcao == "todos":
+    if opcao == "todos": # ver todos os filmes da base de dados
         query='''
             SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento, sinopse  FROM filme
             LEFT JOIN avaliacao
@@ -88,33 +96,25 @@ def Extrair_filmes(cursor, opcao):
             GROUP BY filme.id
             ORDER BY filme.titulo
         '''
-    elif opcao == "top5":
+    elif opcao == "top5": #ver o top 5 dos filmes
         query='''
             SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento, sinopse  FROM filme
-
             LEFT JOIN avaliacao
             ON filme.id = avaliacao.id_filme
-
             GROUP BY filme.id
-
             ORDER BY nota DESC
             LIMIT 5
         '''
-    else:
+    else: #ver filmes por categoria
         query = '''
             SELECT filme.id, filme.titulo, AVG(avaliacao.nota) AS nota, filme.classificacao_indicativa, filme.ano_lancamento, sinopse  FROM filme
-
             LEFT JOIN avaliacao
             ON filme.id = avaliacao.id_filme
-
             JOIN film_cat
             ON filme.id = film_cat.id_filme
-
             JOIN categoria
             ON categoria.id = film_cat.id_categoria
-
             WHERE categoria.genero = %s
-
             GROUP BY filme.id
             ORDER BY filme.titulo
         '''
@@ -128,17 +128,26 @@ def Extrair_filmes(cursor, opcao):
 
     try:    
         cursor.execute(query)
-        return cursor.fetchall() #trai todos os filmes
+        return cursor.fetchall()
     except mysql.connector.Error as error:
         print("ERROR:", error)
         return []
 
 def buscar_filme(cursor, nome_busca):
     try:
-        query = "SELECT id, titulo, classificacao_indicativa, ano_lancamento, sinopse FROM filme WHERE titulo LIKE %s"
-        valor = f"%{nome_busca}%"
+        nome = f"%{nome_busca}%"
 
-        cursor.execute(query, (valor,))
+        cursor.execute('''
+                       SELECT filme.id, filme.titulo, avg(avaliacao.nota) as nota, filme.classificacao_indicativa, filme.ano_lancamento, filme.sinopse FROM filme 
+                       
+                       LEFT JOIN avaliacao
+                       ON filme.id = avaliacao.id_filme
+
+                       WHERE filme.titulo LIKE %s
+
+                       GROUP BY filme.id
+                       ''', (nome,))
+        
         return cursor.fetchall()
     except Exception as error:
         print(f"\nERROR:{error}")
@@ -147,14 +156,33 @@ def buscar_filme(cursor, nome_busca):
 
 def Extrair_categoria(cursor):
     try:
-        query = "SELECT id,genero FROM categoria"
-        cursor.execute(query)
+        cursor.execute("SELECT id,genero FROM categoria")
         return cursor.fetchall()
     except Exception as error:
         print(f"\nERROR:{error}")
         return error
     
+def Extrair_avaliacoes(cursor,id_filme): #avaleaçao = id, id usuario, nota, comentario <- orden de retorno
+    try:
+        cursor.execute('''
+                       SELECT avaliacao.id_usuario, usuario.nome as nome ,avaliacao.nota, avaliacao.comentario FROM avaliacao
+                       
+                       JOIN usuario
+                       ON avaliacao.id_usuario = usuario.id
 
+                       LEFT JOIN filme
+                       ON avaliacao.id_filme = filme.id 
+
+                       WHERE filme.id = %s
+
+                       ORDER BY filme.id 
+                       ''', (id_filme,))
+
+        return cursor.fetchall()
+    except Exception as error:
+        print("ERROR: ",error)
+        return []
+    
 #------------------- agregar dados no banco de dados -------------------#
 
 #Cria um filme agregando ele na base de dados se nao entao devolve um error
@@ -205,7 +233,6 @@ def avaliacao_exist(cursor, id_user, id_filme):
     cursor.execute(query,(id_user,id_filme))
     
     resultado = cursor.fetchone()
-    print("aqui esta el peo:", resultado)
 
     return resultado
 
@@ -226,9 +253,7 @@ def create_avaliacao(cursor, conection_db, avaliacao):
 
 def update_avaliacao(cursor, conection_db, nova_avaliacao):
     try:
-        query = "UPDATE avaliacao SET nota = %s, comentario = %s WHERE id_usuario = %s AND id_filme = %s"
-
-
+        query = "UPDATE avaliacao SET nota = %(nota)s, comentario = %(comentario)s WHERE id_usuario = %(id_usuario)s AND id_filme = %(id_filme)s"
         cursor.execute(query, nova_avaliacao)
         
         conection_db.commit()
@@ -275,4 +300,16 @@ def create_film_cat(cursor, conection_db, id_filme,id_categoria):
         print("Error ao agrgar o filme", error)
         conection_db.rollback()
         return error
+
+def eliminar_filme(cursor, conetion_db, id_filme):
+    try:
+        cursor.execute("DELETE FROM avaliacao WHERE id_filme = %s",(id_filme,))
+        cursor.execute("DELETE FROM film_cat WHERE id_filme = %s",(id_filme,))
+        cursor.execute("DELETE FROM  filme WHERE id = %s",(id_filme,))
+
+        conetion_db.commit()
+
+        print("Filme eliminado da base de dados")
+    except Exception as error:
+        print(f"Error {error}")
 

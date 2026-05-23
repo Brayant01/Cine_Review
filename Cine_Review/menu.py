@@ -80,7 +80,7 @@ def option_validation(aux):
     elif aux == 5:
         mensagem= (
         "\n============================================================\n"
-        "\n               🎬 Deseja agregar outro filme?\n"
+        "\n               🎬 Deseja fazer novamente?\n"
         "[1] Sim\n"
         "[2] Não\n"
         "\n============================================================"
@@ -93,7 +93,18 @@ def option_validation(aux):
         "\n          ⚙️ Escolha uma das siguientes opçoes:?\n"
         "[1] Modificar Tudo\n"
         "[2] Modificar uma das informaçoes\n"
+        "[3] Voltar\n"
         "\n============================================================"
+        )
+        opcao = 2
+    elif aux == 7:
+        mensagem = (
+        "\n============================================================================\n"
+        "!!!!!AVISO (ESTA OPÇAO È IRREVERSIVEL E ELIMINARA TODOS OS DADOS DO FILME)!!!!\n"
+        "\n          ⚙️ Seguro que deseja continuar?\n"
+        "[1] Sim\n"
+        "[2] Nao\n"
+        "\n============================================================================"
         )
         opcao = 2
     else:
@@ -111,6 +122,7 @@ def ver_filmes(filmes_db):
         if not nota:
             texto_nota = f"😔 Sem avaleaçao"
         else:
+            print("Nota: ",nota)
             texto_nota = f"⭐ {nota:.1f} / 10"
 
         print(
@@ -132,6 +144,51 @@ def ver_categorias(categorias):
     
     print("\n","="*60+"\n")
 
+def ver_filme(filme):# orden de filme = id, titulo, nota, classificacao, sinopse
+    id, titulo,nota, classificacao, ano, sinopse = filme
+    
+    print("=" * 60)
+    print(f"🎬 {titulo}")
+    print("=" * 60)
+
+    print(f"\n📌 Classificação: {classificacao}")
+
+    if nota is None:
+        print("😔 Nota média: 0.00")
+    else:
+        print(f"⭐ Nota média: {nota:.1f}")
+
+    print(f"📅 Ano: {ano}")
+
+    print(f"\n📝 Sinopse:\n{sinopse}")
+
+    print("\n" + "=" * 60 + "\n")
+
+def ver_avaliacoes(avaliacoes):
+
+    print("\n" + "=" * 60)
+    print("                AVALIAÇÕES DO FILME")
+    print("=" * 60)
+
+    if not avaliacoes:
+        print("\n⚠️ Este filme ainda não possui avaliações.\n")
+
+    else:
+
+        for avaliacao in avaliacoes:
+
+            id_avaliacao, nome_usuario, nota, comentario = avaliacao
+
+            print("\n" + "-" * 60)
+
+            print(f"👤 Usuário : {nome_usuario}")
+            print(f"⭐ Nota    : {nota}/10")
+
+            print("\n💬 Comentário:")
+            print(f'"{comentario}"')
+
+    print("\n" + "=" * 60)
+    input("Preciona qualquer tecla para voltar:")
 
 def select_filme(filmes_db):#filmes_db = id, titulo, nota, classificacao, ano_lancamento
     selection = input_validation(len(filmes_db),"=============== ⬆️ Escolha uma dos filmes ⬆️ ===============")
@@ -143,27 +200,6 @@ def select_categoria(categorias_db):#filmes_db = id, titulo, nota, classificacao
     
     return categorias_db[selection-1]
 
-def ver_filme(filme):# orden de filme = id, titulo, nota, classificacao, sinopse
-    id, titulo,nota, classificacao, ano, sinopse = filme
-    
-    print("=" * 60)
-    print(f"🎬 {titulo}")
-    print("=" * 60)
-
-    print(f"\n📌 Classificação: {classificacao}")
-
-    if nota is None:
-        print("😔 Nota média: Sem avaliações")
-    else:
-        print(f"⭐ Nota média: {nota:.1f}")
-
-    print(f"📅 Ano: {ano}")
-
-    print(f"\n📝 Sinopse:\n{sinopse}")
-
-    print("\n" + "=" * 60 + "\n")
-
-
 def menu_mod_filme():
     
     mensagem = (
@@ -172,9 +208,8 @@ def menu_mod_filme():
         "============================================================\n"
 
         "Escolha uma informação para modificar:\n"
-
-        "[1] Nome\n"
-        "[2] Classificação\n"
+        "[1] Classificação\n"
+        "[2] Nome\n"
         "[3] Sinopse\n"
         "============================================================\n")
 
@@ -188,19 +223,20 @@ def menu_user_option(type_user,nome):
 
         mensagem=(
             "============================================================\n"
-            "                   OPÇOES DE ADministrador\n"
+            "                   OPÇOES DE ADMINISTRADOR\n"
             "============================================================\n"
 
             f"Benvido {nome} escolhe uma das opçoes:\n"
             "[1] Criar filme \n"
-            "[2] Modificar/Eliminar filme\n"
+            "[2] Modificar filme\n"
             "[3] Criar categoria\n"
             "[4] Agregar Filmes em categoria\n"
-            "[5] Sair\n"
+            "[5] ELIMINAR FILMES  ⚠️\n"
+            "[6] Sair\n"
             "============================================================\n"
         )
 
-        return input_validation(4,mensagem)
+        return input_validation(6,mensagem)
         #print("2- modificar login??")
     
     else:
@@ -223,7 +259,7 @@ def menu_user_option(type_user,nome):
 #---------------------------------------------------------------------------
 def menu_criar_conta():
     mensagem =(
-    f"\n============================================================\n"
+    "\n============================================================\n"
     "                         CRIAR CONTA\n"
     "============================================================\n\n"
 
