@@ -141,6 +141,10 @@ while True:
                                 classi_indi = menu.option_validation(4)# escolhe uma classificaçao indicativa
 
                                 db_management.mod_filme(cursor,conection_db, filme[0],"none",classi_indicativa[classi_indi],1)
+
+                                if menu.option_validation(5) == 2:
+                                        break
+                                
                             elif opcao == 2: # vai modificar so uma das informaçoes
                         
                                 mod_option = menu.menu_mod_filme()

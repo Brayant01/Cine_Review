@@ -58,7 +58,7 @@ def mod_filme(cursor,conection_db, id_filme, opcao_mod, nova_class,type_mod):
             print("Nova calificaçao: ", nova_class)
             sinopse = input("Ingressa a nova sinpse:")
 
-            query = "UPDATE filme SET titulo = %s, cassificacao_indicativa = %s, sinopse = %s WHERE id = %s"
+            query = "UPDATE filme SET titulo = %s, classificacao_indicativa = %s, sinopse = %s WHERE id = %s"
             cursor.execute(query,(nome, nova_class, sinopse, id_filme))
 
         else: #modificar uma parte do filme
