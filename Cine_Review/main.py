@@ -81,7 +81,7 @@ while True:
 
         while True:  # bucle usado para manter o suario na parte de ingresar as informaçoes
             print("\n")
-            print("="*60,"\nPara logar ingresa as siguiente informaçoes",)
+            print("="*60,"\nPara fazer login ingrese as siguiente informaçoes",)
             print("="*60,"\n")
 
             email = input("Email: ").strip().lower()
@@ -193,7 +193,7 @@ while True:
                                 break
                 elif opcao == 5:
                     while True:
-                        print("\n!!!ESTEJA SEGURO DE SEGUIR CON ESTA ACCÃO!!!\n")
+                        print("\n!!!ESTÁ SEGURO DE SEGUIR COM ESSA AÇÃO?!!!\n")
                         filmes_db = db_management.Extrair_filmes(cursor, "todos")
                         menu.ver_filmes(filmes_db)
                         filme = menu.select_filme(filmes_db)
@@ -276,7 +276,7 @@ while True:
                         
                         while True:
                             print("=" * 60)
-                            print("\n         Bucar filme")
+                            print("\n         Buscar filme")
                             print("=" * 60)
 
                             buscar = input("Ingresa o nome do filme:")
