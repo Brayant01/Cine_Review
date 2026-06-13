@@ -28,7 +28,7 @@ conection_db = db_management.conect_data_base()
 cursor = conection_db.cursor()
 
 #---------------- MAIN PROGRAM :) ----------------#
-input()# ao iniciar o programa na terminal de vs ingresa-se de forma automatica a direçao do programa este input so esta para que nao seja mostrad ou ingresado no programa e mostre a mensajen de entrada invalida :c
+input()# ao iniciar o programa na terminal de vs Digite-se de forma automatica a direçao do programa este input so esta para que nao seja mostrad ou Digitedo no programa e mostre a mensajen de entrada invalida :c
 
 while True:
     opcao = menu.main_menu()
@@ -79,13 +79,13 @@ while True:
     
     elif opcao==2: #login
 
-        while True:  # bucle usado para manter o suario na parte de ingresar as informaçoes
+        while True:  # bucle usado para manter o suario na parte de Digiter as informações:
             print("\n")
-            print("="*60,"\nPara fazer login ingrese as siguiente informaçoes",)
+            print("="*60,"\nPara fazer login, digite as seguintes informações:",)
             print("="*60,"\n")
 
             email = input("Email: ").strip().lower()
-            senha = input("Senha : ")
+            senha = input("Senha: ")
 
             user_logado = db_management.login_user(cursor,email,senha) #chama a funçao e guarda um dicionario con dados para verificar que o login foi certo ou nao
 
@@ -124,7 +124,7 @@ while True:
                 elif opcao == 2: #modificar filme
                     while True:
 
-                        opcao = menu.option_validation(6) #selecciona se vai modificar so uma das informaçoes ou tudo o filme
+                        opcao = menu.option_validation(6) #selecciona se vai modificar so uma das informações: ou tudo o filme
                         
                         if opcao == 3:# voltar pra o menu anterior
                             print("\n🔄  Voltando ao menu...\n")
@@ -145,7 +145,7 @@ while True:
                                 if menu.option_validation(5) == 2:
                                         break
                                 
-                            elif opcao == 2: # vai modificar so uma das informaçoes
+                            elif opcao == 2: # vai modificar so uma das informações:
                         
                                 mod_option = menu.menu_mod_filme()
 
@@ -225,7 +225,7 @@ while True:
                         if opcao == 1:
                             filme = menu.select_filme(filmes_db) # orden de filme = id, titulo, nota, classificacao, sinopse
                             menu.ver_filme(filme)
-                            opcao = menu.input_validation(3,"[1] avaliar este filme\n[2] Ver comentarios\n[3] voltar aos filmes")
+                            opcao = menu.input_validation(3,"[1] Avaliar este filme\n[2] Ver comentários\n[3] Voltar aos filmes")
 
                             avaliacao["id_filme"] = filme[0]
                             
@@ -238,7 +238,7 @@ while True:
                                         print("1 = Ruim :c | 10 = Perfeitooo!!! 🤩\n")
 
                                         avaliacao["nota"] = menu.input_validation(10,"Nota (1-10): ")
-                                        avaliacao["comentario"] = input("Comentario: ")
+                                        avaliacao["comentario"] = input("Comentário: ")
                                         
                                         db_management.create_avaliacao(cursor,conection_db,avaliacao)
                                         print("Voltando aos filmes")
@@ -249,7 +249,7 @@ while True:
                                         print("1 = Ruim :c | 10 = Perfeitooo!!! 🤩\n")
 
                                         avaliacao["nota"] = menu.input_validation(10,"Nota (1-10): ")
-                                        avaliacao["comentario"] = input("Comentario: ")
+                                        avaliacao["comentario"] = input("Comentário: ")
                                     
                                         db_management.update_avaliacao(cursor,conection_db,avaliacao)
                                         print("Voltando aos filmes")
@@ -258,7 +258,7 @@ while True:
                                     avaliacoes = db_management.Extrair_avaliacoes(cursor,filme[0])
                                     menu.ver_avaliacoes(avaliacoes)
 
-                                    if menu.input_validation(2,"Deseja avaliar este filme?: [1] SIM\n[2] NAO") == 1:
+                                    if menu.input_validation(2,"Deseja avaliar este filme?: \n[1] SIM\n[2] NÃO") == 1:
                                         opcao = 1 #Voltar directamente a avaliar o filme
                                     else:
 
@@ -279,7 +279,7 @@ while True:
                             print("\n         Buscar filme")
                             print("=" * 60)
 
-                            buscar = input("Ingresa o nome do filme:")
+                            buscar = input("Digite o nome do filme:")
 
                             filmes_db = db_management.buscar_filme(cursor,buscar)
 
@@ -287,7 +287,7 @@ while True:
                                 menu.ver_filmes(filmes_db)
                                 break
                             else:
-                                print(f"Nao foi posivel encontrar o filme {buscar}")
+                                print(f"Não foi posivel encontrar o filme {buscar}")
                                 
                         opcao = menu.option_validation(2)
 
@@ -298,7 +298,7 @@ while True:
                             
                             while True:
     
-                                opcao = menu.input_validation(3,"[1] avaliar este filme\n[2] Ver comentarios\n[3] voltar aos filmes")
+                                opcao = menu.input_validation(3,"[1] Avaliar este filme\n[2] Ver comentários\n[3] Voltar aos filmes")
                                 
                                 while True:
                                     if opcao == 1:# avaliado o filme seleccionado
@@ -333,7 +333,7 @@ while True:
                                         avaliacoes = db_management.Extrair_avaliacoes(cursor,filme[0])
                                         menu.ver_avaliacoes(avaliacoes)
 
-                                        if menu.input_validation(2,"Deseja avaliar este filme?: [1] SIM\n[2] NAO") == 1:
+                                        if menu.input_validation(2,"Deseja avaliar este filme?: [1] SIM\n[2] NÃO") == 1:
                                             opcao = 1 #Voltar directamente a avaliar o filme
                                         else:
 
@@ -354,7 +354,7 @@ while True:
                             id_filme = filme[0]
                             menu.ver_filme(filme)
 
-                            opcao = menu.input_validation(3,"[1] avaliar este filme\n[2] Ver comentarios\n[3] voltar aos filmes")
+                            opcao = menu.input_validation(3,"[1] avaliar este filme\n[2] Ver comentários\n[3] voltar aos filmes")
                             
                             while True:
                                 if opcao == 1:
@@ -386,7 +386,7 @@ while True:
                                     avaliacoes = db_management.Extrair_avaliacoes(cursor,filme[0])
                                     menu.ver_avaliacoes(avaliacoes)
 
-                                    if menu.input_validation(2,"Deseja avaliar este filme?: [1] SIM\n[2] NAO") == 1:
+                                    if menu.input_validation(2,"Deseja avaliar este filme?: [1] SIM\n[2] NÃO") == 1:
                                         opcao = 1 #Voltar directamente a avaliar o filme
                                     else:
                                         print("\n🔄  Voltando...\n")
@@ -396,7 +396,7 @@ while True:
                             break
                     
                 else:
-                    print("VOLTE PRONTOOOOOO!!!!")
+                    print("Volte sempre!!!!")
                     break
 
     elif opcao==3: #criar conta
@@ -404,7 +404,7 @@ while True:
             if menu.menu_criar_conta() == 1:
                 if db_management.val_create_admin() == False:
                     if menu.option_validation(3)==2:
-                        print("vontando ao menu inicial")
+                        print("Voltando ao menu inicial")
                         break
                 else:
                     db_management.create_usuario(cursor,conection_db,1)
@@ -416,7 +416,7 @@ while True:
               
     else:
         conection_db.close()
-        print("Obridado por usar nosso serviço ate mais!!!!")
+        print("Obrigado por usar nosso serviço. Até mais!!!!")
         break
 
 

@@ -19,30 +19,30 @@ def login_user(cursor, email, senha_input):
     resultado = cursor.fetchone()
 
     if not resultado: #se nao tem usuario devolve 0 e uma mensagem
-        print("O usuario nao existe voltando ao inicio")
+        print("O usuário não existe, voltando ao início...")
         return {"status":"no_user"} # 2 = erro ao fazer login se esse valor é retornado entao validar input do usuario
     
     #pasa a senha_db o resuldado da consulta com o valor da senha na base de dados e o valor admin
     id_user, nome, senha_db, type_user = resultado 
 
     if senha_db != senha_input:
-        print("Senha incorrecta")
+        print("Senha incorreta.")
         return {"status": "senha_err"}
 
     
-    print("O usuario foi logado")
+    print("O usuário foi logado.")
     return {"status":"ok", "id":id_user,"nome":nome, "type_user": type_user}
 
 
 #valida se pode o nao criar uma conta de administrador
 def val_create_admin():
-    print("para criar uma conta de administrador ingresa as siguietes informaçoes")
+    print("Para criar uma conta de administrador, preencha as seguintes informações: ")
 
-    admin = input("Administrador:").lower()
+    admin = input("Administrador: ").lower()
     senha = input("Senha: ")
 
     if admin != "root" or senha != "123":
-        print("Credenciais incorrectas")
+        print("Credenciais incorretas.")
         return False
     
     return True
@@ -54,21 +54,21 @@ def mod_filme(cursor,conection_db, id_filme, opcao_mod, nova_class,type_mod):
     try:
 
         if type_mod == 1: #Modificar todo o filme
-            nome = input("Ingressa o novo nome:")
-            print("Nova calificaçao: ", nova_class)
-            sinopse = input("Ingressa a nova sinpse:")
+            nome = input("Digite o novo nome: ")
+            print("Nova classificação: ", nova_class)
+            sinopse = input("Digite a nova sinopse: ")
 
             query = "UPDATE filme SET titulo = %s, classificacao_indicativa = %s, sinopse = %s WHERE id = %s"
             cursor.execute(query,(nome, nova_class, sinopse, id_filme))
 
         else: #modificar uma parte do filme
-            if opcao_mod == "classificaçao":
-                print("classificaçao :)")
+            if opcao_mod == "Classificação":
+                print("Classificação: ")
                 query = "UPDATE filme SET classificacao_indicativa = %s WHERE id = %s"
                 cursor.execute(query,(nova_class,id_filme))
-                print("Classificaçao modificada")
+                print("Classificação modificada.")
             else:
-                print(f"Ingresa a nova informaçao para @ {opcao_mod}")
+                print(f"Digite a nova informação para @{opcao_mod}")
                 modificacao = input(f"Novo/a {opcao_mod}: ")
 
                 query = f"UPDATE filme SET {opcao_mod} = %s WHERE id = %s"
@@ -76,12 +76,12 @@ def mod_filme(cursor,conection_db, id_filme, opcao_mod, nova_class,type_mod):
             
     
         conection_db.commit()
-        print("Modificaçao feita con susesso!!!")
+        print("Modificação feita com sucesso!")
 
     except Exception as error:
         
         conection_db.rollback()
-        print("error ao modificar o filme",error)
+        print("Erro ao modificar o filme",error)
 
 #------------------- ver dados do banco de dados -------------------#
 
@@ -122,7 +122,7 @@ def Extrair_filmes(cursor, opcao):
             cursor.execute(query,(opcao,))
             return cursor.fetchall() #trai todos os filmes
         except mysql.connector.Error as error:
-            print("ERROR:", error)
+            print("ERRO:", error)
             return []
 
 
@@ -130,7 +130,7 @@ def Extrair_filmes(cursor, opcao):
         cursor.execute(query)
         return cursor.fetchall()
     except mysql.connector.Error as error:
-        print("ERROR:", error)
+        print("ERRO:", error)
         return []
 
 def buscar_filme(cursor, nome_busca):
@@ -150,7 +150,7 @@ def buscar_filme(cursor, nome_busca):
         
         return cursor.fetchall()
     except Exception as error:
-        print(f"\nERROR:{error}")
+        print(f"\nERRO:{error}")
         return error
     
 
@@ -159,13 +159,13 @@ def Extrair_categoria(cursor):
         cursor.execute("SELECT id,genero FROM categoria")
         return cursor.fetchall()
     except Exception as error:
-        print(f"\nERROR:{error}")
+        print(f"\nERRO:{error}")
         return error
     
-def Extrair_avaliacoes(cursor,id_filme): #avaleaçao = id, id usuario, nota, comentario <- orden de retorno
+def Extrair_avaliacoes(cursor,id_filme): #avaliação = id, id usuario, nota, comentario <- orden de retorno
     try:
         cursor.execute('''
-                       SELECT avaliacao.id_usuario, usuario.nome as nome ,avaliacao.nota, avaliacao.comentario FROM avaliacao
+                       SELECT avaliacao.id_usuario, usuario.nome as nome ,avaliacao.nota, avaliacao.comentario, DATE_FORMAT(avaliacao.dia_avaliacao, '%d/%m/%Y %H:%i') FROM avaliacao
                        
                        JOIN usuario
                        ON avaliacao.id_usuario = usuario.id
@@ -180,7 +180,7 @@ def Extrair_avaliacoes(cursor,id_filme): #avaleaçao = id, id usuario, nota, com
 
         return cursor.fetchall()
     except Exception as error:
-        print("ERROR: ",error)
+        print("ERRO: ",error)
         return []
     
 #------------------- agregar dados no banco de dados -------------------#
@@ -188,39 +188,39 @@ def Extrair_avaliacoes(cursor,id_filme): #avaleaçao = id, id usuario, nota, com
 #Cria um filme agregando ele na base de dados se nao entao devolve um error
 def create_filme(cursor, conection_db, classificacao_indicativa):
     
-    titulo = str(input("\nIngrea o titulo do filme: ")).lower()
-    ano_lancamento = str(input("\nIngresa o ano do lançamento: "))
-    sinopse = str(input("\nIngresa uma sinpse: "))
+    titulo = str(input("Digite o título do filme: ")).lower()
+    ano_lancamento = str(input("\nDigite o ano do lançamento: "))
+    sinopse = str(input("\nDigite uma sinopse: "))
 
     try:
         query = "INSERT INTO filme (titulo, ano_lancamento, sinopse, classificacao_indicativa) VALUES (%s,%s,%s,%s)"
         cursor.execute(query, (titulo,ano_lancamento,sinopse,classificacao_indicativa))
         conection_db.commit()
         print("-------------- Filme criado --------------")
-        print("voltando ao menu inicial favor de fazer login com a opçao 2")
+        print("Voltando ao menu inicial. Faça login com a opção 2.")
         return True
     except mysql.connector.Error as error:
         if error == 1062:
-            print("ESTE FILME JA FOI AGREGADO NA CATEGORIA ESCOLHIDA")
+            print("ESTE FILME JÁ FOI ADICIONADO NA CATEGORIA ESCOLHIDA")
         
         conection_db.rollback()
         return error
 
 #cria um usuario e agrega ele na base de datos se nao entao devolve um error
 def create_usuario(cursor, conection_db, type_user = 0):
-    nome  = str(input("\nIngresa teu Nome: ")).lower()
-    senha = str(input("\nIngresa tua Senha: "))
-    email = str(input("\nIngresa teu Email: ")).lower()
+    nome  = str(input("\nDigite seu Nome: ")).lower()
+    senha = str(input("\nDigite sua Senha: "))
+    email = str(input("\nDigite seu Email: ")).lower()
 
     try:
         query = "INSERT INTO usuario (nome,senha,email,type_user) VALUES (%s,%s,%s,%s)"
         cursor.execute(query, (nome,senha,email,type_user))
         conection_db.commit()
-        print("------- Usuario criado ----------")
-        print("voltando ao menu inicial favor de fazer login com a opçao 2")
+        print("------- Usuário criado! ----------")
+        print("Voltando ao menu inicial. Faça login com a opção 2.")
         return True
     except Exception as error:
-        print("Error ao criar usuario", error)
+        print("Erro ao criar usuário:", error)
         conection_db.rollback()
         return error
 
@@ -243,11 +243,11 @@ def create_avaliacao(cursor, conection_db, avaliacao):
         cursor.execute(query, avaliacao)
         conection_db.commit()
 
-        print("obrigado por avaliar este filme!!!")
+        print("Obrigado por avaliar este filme!")
         return True
     except Exception as error:
-        print("Nao foi possivel fazer esta avaleaçao")
-        print("error:",error)
+        print("Não foi possível fazer esta avaliação")
+        print("ERRO:",error)
         conection_db.rollback()
         return error 
 
@@ -258,10 +258,10 @@ def update_avaliacao(cursor, conection_db, nova_avaliacao):
         
         conection_db.commit()
 
-        print("SUA AVALEAÇAO FOI ACTUALIZADA!!!")
+        print("SUA AVALIAÇÃO FOI ATUALIZADA!!!")
         return True
     except Exception as error:
-        print("Nao foi possivel fazer esta avaleaçao")
+        print("Não foi possível fazer esta avaliação")
         conection_db.rollback()
         print(error)
         
@@ -269,16 +269,16 @@ def update_avaliacao(cursor, conection_db, nova_avaliacao):
 
 #Cria uma categodia e agrega ela na base de dados
 def create_categoria(cursor, conection_db):
-    print("ingresa o nome do genero desta categoria")
+    print("Digite o nome do gênero desta categoria")
 
-    genero = input("Genero:")
+    genero = input("Gênero:")
 
     try:
         query = "INSERT INTO categoria (genero) VALUES (%s)"
-        cursor.execute(query,genero)
+        cursor.execute(query, (genero,))
         conection_db.commit()    
-        print("------- categoria criada ----------")
-        print("voltando ao menu")
+        print("------- Categoria criada ----------")
+        print("Voltando ao menu.")
         return True
     except Exception as error:
         conection_db.rollback()
@@ -292,12 +292,12 @@ def create_film_cat(cursor, conection_db, id_filme,id_categoria):
         query = "INSERT INTO film_cat (id_filme,id_categoria) VALUES (%s,%s)"
         cursor.execute(query,(id_filme,id_categoria))
         conection_db.commit()
-        print("------- Filme agregado nesta categoria ----------")
-        print("voltando ao menu")
+        print("------- Filme adicionado nesta categoria ----------")
+        print("Voltando ao menu.")
         return True
     
     except Exception as error:
-        print("Error ao agrgar o filme", error)
+        print("Erro ao adicionar o filme", error)
         conection_db.rollback()
         return error
 
@@ -309,7 +309,7 @@ def eliminar_filme(cursor, conetion_db, id_filme):
 
         conetion_db.commit()
 
-        print("Filme eliminado da base de dados")
+        print("FILME APAGADO DA BASE DE DADOS!")
     except Exception as error:
-        print(f"Error {error}")
+        print(f"Erro {error}")
 

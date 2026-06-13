@@ -10,7 +10,7 @@ def input_validation(valor_max, mensagem):
             if  opcao > valor_max or opcao < 1:
                 print("\n" + "=" * 60)
                 print("\n❌ Opção inválida!")
-                print("Por favor, escolha um valor válido do menu.\n")
+                print("Por favor, escolha uma opção válida do menu.\n")
 
                 input("Pressione ENTER para continuar...")
 
@@ -20,21 +20,21 @@ def input_validation(valor_max, mensagem):
         
         except ValueError:
             print("\n" + "=" * 60)
-            print("\n⚠️  !Entrada inválida!")
+            print("\n⚠️ Entrada inválida!")
             print("Digite apenas números válidos.\n")
 
             input("Pressione ENTER para continuar...")
 
             print("\n" + "=" * 60 +"\n")
 
-#----------------- Opçoes do menu principal -----------------
+#----------------- opções do menu principal -----------------
 def option_validation(aux):
     
     if aux == 1:
         mensagem= (    
             "\n============================================================\n"
             "\n               🎬 Deseja ver filme?\n"
-            "[1] Ver todos os Filme\n"
+            "[1] Ver todos os Filmes\n"
             "[2] Ver o TOP 5 *o*\n"
             "[3] Ver por categoria\n"
             "[4] Voltar\n"
@@ -90,9 +90,9 @@ def option_validation(aux):
     elif aux == 6:
         mensagem= (
         "\n============================================================\n"
-        "\n          ⚙️ Escolha uma das siguientes opçoes:?\n"
-        "[1] Modificar Tudo\n"
-        "[2] Modificar uma das informaçoes\n"
+        "\n          ⚙️ Escolha uma das seguintes opções:\n"
+        "[1] Modificar tudo\n"
+        "[2] Modificar uma das informações\n"
         "[3] Voltar\n"
         "\n============================================================"
         )
@@ -100,10 +100,10 @@ def option_validation(aux):
     elif aux == 7:
         mensagem = (
         "\n============================================================================\n"
-        "!!!!!AVISO (ESTA OPÇAO È IRREVERSIVEL E ELIMINARA TODOS OS DADOS DO FILME)!!!!\n"
-        "\n          ⚙️ Seguro que deseja continuar?\n"
+        "!!!!!AVISO: ESTA OPÇÃO É IRREVERSÍVEL E APAGARÁ TODOS OS DADOS DO FILME!!!!\n"
+        "\n          ⚙️ Tem certeza que deseja continuar?\n"
         "[1] Sim\n"
-        "[2] Nao\n"
+        "[2] Não\n"
         "\n============================================================================"
         )
         opcao = 2
@@ -120,7 +120,7 @@ def ver_filmes(filmes_db):
         id, titulo, nota, classificacao, ano,*_ = filme
         
         if not nota:
-            texto_nota = f"😔 Sem avaleaçao"
+            texto_nota = f"😔 Sem avaliação"
         else:
             texto_nota = f"⭐ {nota:.1f} / 10"
 
@@ -176,21 +176,21 @@ def ver_avaliacoes(avaliacoes):
 
         for avaliacao in avaliacoes:
 
-            id_avaliacao, nome_usuario, nota, comentario = avaliacao
+            id_avaliacao, nome_usuario, nota, comentario, dia_avaliacao = avaliacao
 
             print("\n" + "-" * 60)
 
             print(f"👤 Usuário : {nome_usuario}")
             print(f"⭐ Nota    : {nota}/10")
-
             print("\n💬 Comentário:")
             print(f'"{comentario}"')
+            print(f"📅 Data   : {dia_avaliacao}")
 
     print("\n" + "=" * 60)
-    input("Preciona qualquer tecla para voltar:")
+    input("Pressione qualquer tecla para voltar:")
 
 def select_filme(filmes_db):#filmes_db = id, titulo, nota, classificacao, ano_lancamento
-    selection = input_validation(len(filmes_db),"=============== ⬆️ Escolha uma dos filmes ⬆️ ===============")
+    selection = input_validation(len(filmes_db),"=============== ⬆️ Escolha um dos filmes ⬆️ ===============")
     
     return filmes_db[selection-1]
 
@@ -217,20 +217,20 @@ def menu_mod_filme():
 
 def menu_user_option(type_user,nome):
     
-    # Se o usario for admin entao tem essas opçoes
+    # Se o usario for admin entao tem essas opções
     if(type_user == 1):
 
         mensagem=(
             "============================================================\n"
-            "                   OPÇOES DE ADMINISTRADOR\n"
+            "                   OPÇÕES DE ADMINISTRADOR\n"
             "============================================================\n"
 
-            f"Benvido {nome} escolhe uma das opçoes:\n"
+            f"Bem-vindo {nome}! Escolha uma das opções:\n"
             "[1] Criar filme \n"
             "[2] Modificar filme\n"
             "[3] Criar categoria\n"
-            "[4] Agregar Filmes em categoria\n"
-            "[5] ELIMINAR FILMES  ⚠️\n"
+            "[4] Adicionar filmes à categoria\n"
+            "[5] APAGAR FILMES  ⚠️\n"
             "[6] Sair\n"
             "============================================================\n"
         )
@@ -239,17 +239,17 @@ def menu_user_option(type_user,nome):
         #print("2- modificar login??")
     
     else:
-        #se o usuario nao for admin entao tem essas opçoes
+        #se o usuario nao for admin entao tem essas opções
     
         mensagem=(
             "============================================================\n"
-            "                       OPÇOES DE USUARIO\n"
+            "                       OPÇÕES DE USUÁRIO\n"
             "============================================================\n"
 
-            f"Benvido {nome} escolhe uma das opçoes:\n"
+            f"Bem-vindo {nome}! Escolha uma das opções:\n"
             "[1] Ver todos os filmes\n"
             "[2] Buscar filme\n"
-            "[3] ver top 5 *o*\n"
+            "[3] Ver top 5 *o*\n"
             "[4] Sair\n"
             "============================================================\n"
         )
